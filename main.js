@@ -20,6 +20,15 @@ document.querySelectorAll('button').forEach(button => {
   });
 });
 
+// Special handler for "Get Access" button in welcome section
+const welcomeButton = document.querySelector('.welcome button');
+if (welcomeButton) {
+  welcomeButton.addEventListener('click', function(e) {
+    e.stopPropagation();
+    scrollToSectionCenter('cta');
+  });
+}
+
 // Intersection Observer for fade-in animations
 const observer = new IntersectionObserver((entries) => {
   entries.forEach(entry => {
@@ -33,17 +42,22 @@ document.querySelectorAll('section').forEach(section => {
   observer.observe(section);
 });
 
+// Function to scroll to section center
+function scrollToSectionCenter(targetId) {
+  const target = document.getElementById(targetId);
+  if (!target) return;
+
+  const rect = target.getBoundingClientRect();
+  const scrollTo = window.scrollY + rect.top - (window.innerHeight / 2 - rect.height / 2);
+  window.scrollTo({ top: scrollTo, behavior: 'smooth' });
+}
+
 // Smooth center-scroll when nav links are clicked
 const navLinks = document.querySelectorAll('nav .nav-links a');
 navLinks.forEach(link => {
   link.addEventListener('click', function(event) {
     event.preventDefault();
     const targetId = this.getAttribute('href').slice(1);
-    const target = document.getElementById(targetId);
-    if (!target) return;
-
-    const rect = target.getBoundingClientRect();
-    const scrollTo = window.scrollY + rect.top - (window.innerHeight / 2 - rect.height / 2);
-    window.scrollTo({ top: scrollTo, behavior: 'smooth' });
+    scrollToSectionCenter(targetId);
   });
 });
